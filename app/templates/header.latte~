@@ -15,7 +15,7 @@
 				<li n:class="$presenter->isLinkCurrent('Full:') ? 'active'"><a n:href="Full:">Full functionality</a></li>
                         	<li n:class="$presenter->isLinkCurrent('Tree:') ? 'active'"><a n:href="Tree:">Tree</a></li>
                         	<li><a href="http://grid.mesour.com">Live DEMO</a></li>
-				<li><a href="http://apis.mesour.com/api/DataGrid2.0/" target="_blank">API</a></li>
+				<li><a href="http://grid.mesour.com">API</a></li>
 				<li><a href="http://forum.nette.org/cs/20448-novy-nette-datagrid-pro-bootstrap-s-moznosti-vypsat-strom?p=1#p140527" target="_blank">Contact</a></li>
 			</ul>
 		</div>
