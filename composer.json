@@ -1,4 +1,12 @@
 {
+    "name": "mesour/datagrid-sandbox",
+    "description": "Mesour DataGrid sandbox",
+    "homepage": "http://grido.bugyik.cz/example/",
+    "license": ["BSD-3", "GPL-3.0"],
+    "authors": [{
+        "name": "Matouš Němec",
+        "homepage": "http://mesour.com"
+    }],
     "require": {
         "php": ">= 5.3.7",
         "mesour/datagrid": "~2.0.0",
