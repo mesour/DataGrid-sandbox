@@ -1,7 +1,7 @@
 {
     "name": "mesour/datagrid-sandbox",
     "description": "Mesour DataGrid sandbox",
-    "homepage": "http://grido.bugyik.cz/example/",
+    "homepage": "http://grid.mesour.com",
     "license": ["BSD-3", "GPL-3.0"],
     "authors": [{
         "name": "Matouš Němec",
