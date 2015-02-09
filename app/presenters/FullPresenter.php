@@ -2,6 +2,8 @@
 
 namespace App\Presenters;
 
+use Mesour\DataGrid\_Grid;
+use Mesour\DataGrid\BasicGrid;
 use Nette,
     App\Model,
     \Mesour\DataGrid\Grid,
@@ -15,6 +17,60 @@ use Nette,
  */
 class FullPresenter extends BasePresenter {
 
+	private function getSubGrid() {
+		$_sub_grid = new BasicGrid;
+
+		$_sub_grid->setPrimaryKey('id');
+
+		$_sub_grid->enablePager(5);
+
+		$_sub_grid->enableEditableCells();
+
+		$_sub_grid->onEditCell[] = $this->editCell;
+
+		$_sub_grid->enableSorting();
+
+		$_sub_grid->onSort[] = $this->editSort;
+
+		$_sub_grid->addText('description');
+
+		$_sub_grid->addText('name');
+
+		$selection = $_sub_grid->enableRowSelection();
+
+		$selection->addLink('Active')
+		    ->onCall[] = $this->activeSelected;
+
+		$selection->addLink('Unactive')
+		    ->setAjax(FALSE)
+		    ->onCall[] = $this->unactiveSelected;
+
+		$selection->addLink('Delete')
+		    ->setConfirm('Really delete all selected users?')
+		    ->onCall[] = $this->deleteSelected;
+
+		return $_sub_grid;
+	}
+
+	public function createTestForm(Nette\ComponentModel\IContainer $parent , $name) {
+		$form = new Nette\Application\UI\Form($parent, $name);
+
+		$form->addText('name');
+
+		$form->addHidden('primary_key');
+
+		$form->addSubmit('send', 'Save');
+
+		$form->onSuccess[] = $this->saveForm;
+
+		return $form;
+	}
+
+	public function saveForm(Nette\Application\UI\Form $form) {
+		$values = $form->getValues();
+		print_r($values);
+	}
+
  	protected function createComponentFullDataGrid($name) {
 		$source = new NetteDbDataSource($this->demo_model->getUserSelection());
 
@@ -22,11 +78,35 @@ class FullPresenter extends BasePresenter {
 
 		$table_id = 'user_id';
 
-		$source->setPrimaryKey($table_id);
+		$grid->setPrimaryKey($table_id);
 
 		$grid->setDataSource($source);
 
 		$grid->enablePager(5);
+
+		$subItems = $grid->enableSubItems();
+
+		$subItems->addGridItem('groups', 'User groups', $this->getSubGrid())
+			->setCallback(function(BasicGrid $sub_grid, $data) {
+				$source = new NetteDbDataSource($this->demo_model->getUserGroupsSelection($data['user_id']));
+
+				$sub_grid->setDataSource($source);
+			});
+
+		$subItems->addTemplateItem('description', 'Long description', __DIR__ . '/../templates/Full/_sub_item.latte', 'test')
+			->setCallback(function(Nette\Application\UI\ITemplate $template, $data) {
+				$template->name = $data['name'];
+			});
+
+		$subItems->addComponentItem('form', 'Test form', callback($this, 'createTestForm'))
+			->setCallback(function(Nette\Application\UI\Form $form, $data) {
+				$data['primary_key'] = $data['user_id'];
+				$form->setDefaults($data);
+			});
+
+		$subItems->addCallbackItem('callback', 'User info', function($data) {
+			return $data['name'] . ' ' . $data['surname'];
+		});
 
 		$grid->enableEditableCells();
 
@@ -87,12 +167,23 @@ class FullPresenter extends BasePresenter {
 		    ->setMaxHeight(80)
 		    ->setMaxWidth(80);
 
+		$grid->addTemplate('name', 'Template')
+			->setTemplate(__DIR__ . '/../templates/Full/_test.latte')
+		    	->setBlock('test')
+			->setCallback(function($data, Nette\Application\UI\ITemplate $template) {
+				$template->name = $data['name'];
+			});
+
 		$grid->addText('name', 'Name');
 
 		$grid->addDate('last_login', 'Last login')
 		    ->setFormat('j.n.Y');
 
-		$grid->addNumber('amount', 'Amount');
+		$grid->addNumber('amount', 'Amount')
+		    	->setDecimals(2)
+		    	->setThousandsSeparator(' ')
+		    	->setDecimalPoint(',')
+			->setUnit('EUR');
 
 		$container = $grid->addContainer('name', 'Name');
 
@@ -105,7 +196,7 @@ class FullPresenter extends BasePresenter {
 		$container2 = $grid->addContainer('name', 'Actions')
 		    ->setOrdering(FALSE);
 
-		$actions = $container2->addActions();
+		$actions = $container2->addActions('Actions');
 
 		$actions->addDropDown()
 		    ->setType('btn-danger')

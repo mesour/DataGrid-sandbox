@@ -75,8 +75,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	}
 
 	public function editSort() {
-		print_r(func_get_args());
-		die;
+		//print_r(func_get_args());
+		//die;
 	}
 
 	public function actionChangeStatusPage($id, $status) {

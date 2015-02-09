@@ -21,12 +21,12 @@ class TreePresenter extends BasePresenter {
 
 		$table_id = 'page_id';
 
-		$source->setPrimaryKey($table_id);
-
 		$source->setParentKey('parent_id'); //! require set parent key, default = "parent_id"
 
 		//! here create instance \DataGrid\GridTree
-		$grid = new _GridTree($this, $name);
+		$grid = new GridTree($this, $name);
+
+		$grid->setPrimaryKey($table_id);
 
 		$grid->setDataSource($source);
 
