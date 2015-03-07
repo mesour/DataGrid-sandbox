@@ -9,9 +9,6 @@ use Nette,
     Mesour\DataGrid\NetteDbDataSource;
 
 
-/**
- * Tree presenter.
- */
 class TreePresenter extends BasePresenter {
 
 	protected function createComponentTreeDataGrid($name) {
@@ -25,6 +22,10 @@ class TreePresenter extends BasePresenter {
 
 		//! here create instance \DataGrid\GridTree
 		$grid = new GridTree($this, $name);
+
+		$grid->onRenderRow[] = function(\Mesour\DataGrid\Render\Row $row, $rowData) {
+			$row->setAttribute('class', 'test');
+		};
 
 		$grid->setPrimaryKey($table_id);
 

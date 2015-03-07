@@ -7,9 +7,6 @@ use Nette,
 	Tracy\Debugger;
 
 
-/**
- * Error presenter.
- */
 class ErrorPresenter extends BasePresenter
 {
 

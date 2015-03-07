@@ -4,6 +4,9 @@ namespace App\Presenters;
 
 use Mesour\DataGrid\_Grid;
 use Mesour\DataGrid\BasicGrid;
+use Mesour\DataGrid\Column\IColumn;
+use Mesour\DataGrid\Column\Text;
+use Mesour\DataGrid\Render\Renderer;
 use Nette,
     App\Model,
     \Mesour\DataGrid\Grid,
@@ -12,9 +15,6 @@ use Nette,
     \Mesour\DataGrid\DibiDataSource;
 
 
-/**
- * Basic presenter.
- */
 class FullPresenter extends BasePresenter {
 
 	private function getSubGrid() {
@@ -72,7 +72,8 @@ class FullPresenter extends BasePresenter {
 	}
 
  	protected function createComponentFullDataGrid($name) {
-		$source = new NetteDbDataSource($this->demo_model->getUserSelection());
+		$source = new DibiDataSource($this->dibiConnection->select('*')->from('user')->toDataSource());
+		//$source = new NetteDbDataSource($this->demo_model->getUserSelection());
 
 		$grid = new Grid($this, $name);
 
@@ -83,6 +84,18 @@ class FullPresenter extends BasePresenter {
 		$grid->setDataSource($source);
 
 		$grid->enablePager(5);
+
+		$grid->onRenderRow[] = function(\Mesour\DataGrid\Render\Row $row, $rowData) {
+			$row->setAttribute('class', 'test');
+		};
+
+		$grid->onRenderHeader[] = function(\Mesour\DataGrid\Render\Header $header) {
+			$header->setAttribute('class', 'testxxx', TRUE);
+		};
+
+		$grid->onRenderBody[] = function(\Mesour\DataGrid\Render\Body $body) {
+			$body->setAttribute('class', 'aaaaa', TRUE);
+		};
 
 		$subItems = $grid->enableSubItems();
 
@@ -141,7 +154,7 @@ class FullPresenter extends BasePresenter {
 		    ->setClassName('ajax')
 		    ->setIcon('glyphicon-ban-circle')
 		    ->setTitle('Set as active (unactive)')
-		    ->addAttribute('href', new Link(array(
+		    ->setAttribute('href', new Link(array(
 			Link::HREF => 'changeStatusUser!',
 			Link::PARAMS => array(
 			    'id' => '{' . $table_id . '}',
@@ -155,7 +168,7 @@ class FullPresenter extends BasePresenter {
 		    ->setClassName('ajax')
 		    ->setIcon('glyphicon-ok-circle')
 		    ->setTitle('Set as unactive (active)')
-		    ->addAttribute('href', new Link(array(
+		    ->setAttribute('href', new Link(array(
 			Link::HREF => 'changeStatusUser!',
 			Link::PARAMS => array(
 			    'id' => '{' . $table_id . '}',
@@ -174,7 +187,14 @@ class FullPresenter extends BasePresenter {
 				$template->name = $data['name'];
 			});
 
-		$grid->addText('name', 'Name');
+		$grid->addText('name', 'Name')
+			->onRender[] = function($data, Text $column) {
+			if($data['amount'] > 10000) {
+				$column->setAttribute('class', 'big');
+			} else {
+				$column->setAttribute('class', '');
+			}
+		};
 
 		$grid->addDate('last_login', 'Last login')
 		    ->setFormat('j.n.Y');
@@ -188,8 +208,8 @@ class FullPresenter extends BasePresenter {
 		$container = $grid->addContainer('name', 'Name');
 
 		$container->addText('name')
-		    ->addAttribute('class', 'bbb')
-		    ->addAttribute('class', 'ccc', TRUE);
+		    ->setAttribute('class', 'bbb')
+		    ->setAttribute('class', 'ccc', TRUE);
 
 		$container->addText('surname');
 
@@ -198,26 +218,26 @@ class FullPresenter extends BasePresenter {
 
 		$actions = $container2->addActions('Actions');
 
-		$actions->addDropDown()
-		    ->setType('btn-danger')
-		    ->addGroup('DropDown header')
-		    ->addLink('DataGrid:editUser', 'Test link', array(
-			'id' => '{' . $table_id . '}'
-		    ))
-		    ->addLink('DataGrid:editUser', 'Test link 2', array(
-			'id' => '{' . $table_id . '}'
-		    ))
-		    ->addSeparator()
-		    ->addGroup('DropDown header 2')
-		    ->addLink('DataGrid:editUser', 'Test link 3', array(
-			'id' => '{' . $table_id . '}'
-		    ));
+		$dropDown = $actions->addDropDown()
+		    ->setType('btn-danger');
+		$dropDown->addHeader('DropDown header');
+		$dropDown->addLink('Test link', new Link('DataGrid:editUser', array(
+		    'id' => '{' . $table_id . '}'
+		)));
+		$dropDown->addLink('Test link 2', new Link('DataGrid:editUser', array(
+		    'id' => '{' . $table_id . '}'
+		)));
+		$dropDown->addSeparator();
+		$dropDown->addHeader('DropDown header 2');
+		$dropDown->addLink('Test link 2', new Link('DataGrid:editUser', array(
+		    'id' => '{' . $table_id . '}'
+		)));
 
 		$actions->addButton()
 		    ->setType('btn-primary')
 		    ->setIcon('glyphicon-pencil')
 		    ->setTitle('Edit')
-		    ->addAttribute('href', new Link(array(
+		    ->setAttribute('href', new Link(array(
 			Link::HREF => 'DataGrid:editUser',
 			Link::PARAMS => array(
 			    'id' => '{' . $table_id . '}'
@@ -229,7 +249,7 @@ class FullPresenter extends BasePresenter {
 		    ->setIcon('glyphicon-trash')
 		    ->setConfirm('Realy want to delete user?')
 		    ->setTitle('Delete')
-		    ->addAttribute('href', new Link(array(
+		    ->setAttribute('href', new Link(array(
 			Link::HREF => 'deleteUser!',
 			Link::PARAMS => array(
 			    'id' => '{' . $table_id . '}'
