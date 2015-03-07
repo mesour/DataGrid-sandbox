@@ -52,7 +52,7 @@ class FullPresenter extends BasePresenter {
 		return $_sub_grid;
 	}
 
-	public function createTestForm(Nette\ComponentModel\IContainer $parent , $name) {
+	public function createTestForm(Nette\ComponentModel\IContainer $parent, $name) {
 		$form = new Nette\Application\UI\Form($parent, $name);
 
 		$form->addText('name');
@@ -71,7 +71,7 @@ class FullPresenter extends BasePresenter {
 		print_r($values);
 	}
 
- 	protected function createComponentFullDataGrid($name) {
+	protected function createComponentFullDataGrid($name) {
 		$source = new DibiDataSource($this->dibiConnection->select('*')->from('user')->toDataSource());
 		//$source = new NetteDbDataSource($this->demo_model->getUserSelection());
 
@@ -85,39 +85,39 @@ class FullPresenter extends BasePresenter {
 
 		$grid->enablePager(5);
 
-		$grid->onRenderRow[] = function(\Mesour\DataGrid\Render\Row $row, $rowData) {
+		$grid->onRenderRow[] = function (\Mesour\DataGrid\Render\Row $row, $rowData) {
 			$row->setAttribute('class', 'test');
 		};
 
-		$grid->onRenderHeader[] = function(\Mesour\DataGrid\Render\Header $header) {
+		$grid->onRenderHeader[] = function (\Mesour\DataGrid\Render\Header $header) {
 			$header->setAttribute('class', 'testxxx', TRUE);
 		};
 
-		$grid->onRenderBody[] = function(\Mesour\DataGrid\Render\Body $body) {
+		$grid->onRenderBody[] = function (\Mesour\DataGrid\Render\Body $body) {
 			$body->setAttribute('class', 'aaaaa', TRUE);
 		};
 
 		$subItems = $grid->enableSubItems();
 
 		$subItems->addGridItem('groups', 'User groups', $this->getSubGrid())
-			->setCallback(function(BasicGrid $sub_grid, $data) {
-				$source = new NetteDbDataSource($this->demo_model->getUserGroupsSelection($data['user_id']));
+		    ->setCallback(function (BasicGrid $sub_grid, $data) {
+			    $source = new NetteDbDataSource($this->demo_model->getUserGroupsSelection($data['user_id']));
 
-				$sub_grid->setDataSource($source);
-			});
+			    $sub_grid->setDataSource($source);
+		    });
 
 		$subItems->addTemplateItem('description', 'Long description', __DIR__ . '/../templates/Full/_sub_item.latte', 'test')
-			->setCallback(function(Nette\Application\UI\ITemplate $template, $data) {
-				$template->name = $data['name'];
-			});
+		    ->setCallback(function (Nette\Application\UI\ITemplate $template, $data) {
+			    $template->name = $data['name'];
+		    });
 
 		$subItems->addComponentItem('form', 'Test form', callback($this, 'createTestForm'))
-			->setCallback(function(Nette\Application\UI\Form $form, $data) {
-				$data['primary_key'] = $data['user_id'];
-				$form->setDefaults($data);
-			});
+		    ->setCallback(function (Nette\Application\UI\Form $form, $data) {
+			    $data['primary_key'] = $data['user_id'];
+			    $form->setDefaults($data);
+		    });
 
-		$subItems->addCallbackItem('callback', 'User info', function($data) {
+		$subItems->addCallbackItem('callback', 'User info', function ($data) {
 			return $data['name'] . ' ' . $data['surname'];
 		});
 
@@ -142,6 +142,10 @@ class FullPresenter extends BasePresenter {
 		    ->setConfirm('Really delete all selected users?')
 		    ->onCall[] = $this->deleteSelected;
 
+		$grid->getSelectionColumn()
+		    ->addHelper('Select active', '1')
+		    ->addHelper('Select inactive', '0');
+
 		$grid->onEditCell[] = $this->editCell;
 
 		$grid->onSort[] = $this->editSort;
@@ -149,11 +153,11 @@ class FullPresenter extends BasePresenter {
 		$status_column = $grid->addStatus('action', 'S');
 
 		$status_column->addButton()
-		    ->setStatus('0') //! show if status == 0
+		    ->setStatus('0')//! show if status == 0
 		    ->setType('btn-danger')
 		    ->setClassName('ajax')
 		    ->setIcon('glyphicon-ban-circle')
-		    ->setTitle('Set as active (unactive)')
+		    ->setTitle('Set as active (inactive)')
 		    ->setAttribute('href', new Link(array(
 			Link::HREF => 'changeStatusUser!',
 			Link::PARAMS => array(
@@ -163,11 +167,11 @@ class FullPresenter extends BasePresenter {
 		    )));
 
 		$status_column->addButton()
-		    ->setStatus('1') //! show if status == 1
+		    ->setStatus('1')//! show if status == 1
 		    ->setType('btn-success')
 		    ->setClassName('ajax')
 		    ->setIcon('glyphicon-ok-circle')
-		    ->setTitle('Set as unactive (active)')
+		    ->setTitle('Set as inactive (active)')
 		    ->setAttribute('href', new Link(array(
 			Link::HREF => 'changeStatusUser!',
 			Link::PARAMS => array(
@@ -181,15 +185,15 @@ class FullPresenter extends BasePresenter {
 		    ->setMaxWidth(80);
 
 		$grid->addTemplate('name', 'Template')
-			->setTemplate(__DIR__ . '/../templates/Full/_test.latte')
-		    	->setBlock('test')
-			->setCallback(function($data, Nette\Application\UI\ITemplate $template) {
-				$template->name = $data['name'];
-			});
+		    ->setTemplate(__DIR__ . '/../templates/Full/_test.latte')
+		    ->setBlock('test')
+		    ->setCallback(function ($data, Nette\Application\UI\ITemplate $template) {
+			    $template->name = $data['name'];
+		    });
 
 		$grid->addText('name', 'Name')
-			->onRender[] = function($data, Text $column) {
-			if($data['amount'] > 10000) {
+		    ->onRender[] = function ($data, Text $column) {
+			if ($data['amount'] > 10000) {
 				$column->setAttribute('class', 'big');
 			} else {
 				$column->setAttribute('class', '');
@@ -200,10 +204,10 @@ class FullPresenter extends BasePresenter {
 		    ->setFormat('j.n.Y');
 
 		$grid->addNumber('amount', 'Amount')
-		    	->setDecimals(2)
-		    	->setThousandsSeparator(' ')
-		    	->setDecimalPoint(',')
-			->setUnit('EUR');
+		    ->setDecimals(2)
+		    ->setThousandsSeparator(' ')
+		    ->setDecimalPoint(',')
+		    ->setUnit('EUR');
 
 		$container = $grid->addContainer('name', 'Name');
 
