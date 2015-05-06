@@ -75,7 +75,16 @@ class FullPresenter extends BasePresenter {
 		$source = new DibiDataSource($this->dibiConnection->select('*')->from('user')->toDataSource());
 		//$source = new NetteDbDataSource($this->demo_model->getUserSelection());
 
+        Grid::disableJsDraw();
+
 		$grid = new Grid($this, $name);
+
+        Link::$checkPermissionCallback = function($item) {
+            if($item === 'DataGrid:editUser') {
+                return FALSE;
+            }
+            return $item;
+        };
 
 		$table_id = 'user_id';
 
@@ -225,17 +234,13 @@ class FullPresenter extends BasePresenter {
 		$dropDown = $actions->addDropDown()
 		    ->setType('btn-danger');
 		$dropDown->addHeader('DropDown header');
-		$dropDown->addLink('Test link', new Link('DataGrid:editUser', array(
-		    'id' => '{' . $table_id . '}'
-		)));
-		$dropDown->addLink('Test link 2', new Link('DataGrid:editUser', array(
-		    'id' => '{' . $table_id . '}'
-		)));
+		$dropDown->addLink('Test link', new Link('DataGrid:'));
+        $dropDown->addLink('Test link 2', new Link('DataGrid:editUser', array(
+            'id' => '{' . $table_id . '}'
+        )));
 		$dropDown->addSeparator();
 		$dropDown->addHeader('DropDown header 2');
-		$dropDown->addLink('Test link 2', new Link('DataGrid:editUser', array(
-		    'id' => '{' . $table_id . '}'
-		)));
+        $dropDown->addLink('Test link 2', new Link('Full:'));
 
 		$actions->addButton()
 		    ->setType('btn-primary')

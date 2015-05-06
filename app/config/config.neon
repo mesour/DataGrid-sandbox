@@ -15,12 +15,12 @@ parameters:
 		lazy: TRUE
 		profiler: TRUE
 
-	database:
-		dsn: "mysql:host=127.0.0.1;dbname=demo.mesour.com"
-		user: "root"
-		password: "root"
-		options:
-			lazy: yes
+database:
+	dsn: "mysql:host=127.0.0.1;dbname=demo.mesour.com"
+	user: "root"
+	password: "root"
+	options:
+		lazy: yes
 
 php:
 	date.timezone: Europe/Prague
@@ -39,12 +39,7 @@ services:
 	- App\Model\UserManager
 	- App\RouterFactory
 	- App\Model\DemoModel
-	connect:
-		class: \Nette\Database\Connection
-		arguments: [%database.dsn%, %database.user%, %database.password%, %database.options%]
-	dbContext:
-		class: \Nette\Database\Context
-		arguments: [@connect]
+
 	database:
 		class: DibiConnection
 		arguments: [%dibiDatabase%]
