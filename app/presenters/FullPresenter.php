@@ -203,6 +203,7 @@ class FullPresenter extends BasePresenter {
 		    });
 
 		$grid->addText('name', 'Name')
+			->setRealColumnName('user.name')
 		    ->onRender[] = function ($data, Text $column) {
 			if ($data['amount'] > 10000) {
 				$column->setAttribute('class', 'big');
