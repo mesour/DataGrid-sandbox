@@ -72,8 +72,10 @@ class FullPresenter extends BasePresenter {
 	}
 
 	protected function createComponentFullDataGrid($name) {
-		$source = new DibiDataSource($this->dibiConnection->select('*')->from('user')->toDataSource());
-		//$source = new NetteDbDataSource($this->demo_model->getUserSelection());
+		//$source = new DibiDataSource($this->dibiConnection->select('*')->from('user')->toDataSource());
+		$source = new NetteDbDataSource($this->demo_model->getUserSelection(), $this->context->getByType(Nette\Database\Context::class));
+
+		$source->setRelated('group', 'group_id', 'name', 'group_name');
 
         Grid::disableJsDraw();
 
@@ -217,6 +219,8 @@ class FullPresenter extends BasePresenter {
 		    ->setThousandsSeparator(' ')
 		    ->setDecimalPoint(',')
 		    ->setUnit('EUR');
+
+		$grid->addText('group_name', 'Group');
 
 		$container = $grid->addContainer('name', 'Name');
 

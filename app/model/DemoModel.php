@@ -19,7 +19,9 @@ class DemoModel extends \Nette\Object {
 	}
 
 	public function getUserSelection() {
-		return $this->database->table('user');
+		return $this->database->table('user')
+			->select('user_id,user.name,action,surname,email')
+			->select('last_login,amount,avatar,order,timestamp,group_id');
 	}
 
 	public function getEmptySelection() {
