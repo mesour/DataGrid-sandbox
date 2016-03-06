@@ -2,15 +2,19 @@
     "name": "mesour/datagrid-sandbox",
     "description": "Mesour DataGrid sandbox",
     "homepage": "http://grid.mesour.com",
-    "license": ["BSD-3", "GPL-3.0"],
+    "license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
     "authors": [{
         "name": "Matouš Němec",
         "homepage": "http://mesour.com"
     }],
     "require": {
-        "php": ">= 5.3.7",
-        "mesour/datagrid": "dev-devel",
-        "nette/nette": "~2.3.0",
-        "dibi/dibi": "~2.1.0"
-    }
+        "php": ">= 5.5",
+        "mesour/datagrid": "3.0.*@beta",
+        "mesour/array-manager": "^0.0.1"
+    },
+    "require-dev": {
+        "tracy/tracy": "^2.3"
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }
