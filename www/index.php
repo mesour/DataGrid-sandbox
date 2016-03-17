@@ -20,6 +20,9 @@ define('TEMP_DIR', __DIR__ . '/../temp/cache');
 
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 
 	<link rel="stylesheet" href="css/mesour.grid.min.css">
@@ -168,6 +171,9 @@ $grid->addText('group_name', 'Group');
 $grid->addNumber('amount', 'Amount')
 	->setUnit('CZK');
 
+$grid->addDate('last_login', 'Last login')
+	->setFormat('Y-m-d H:i:s');
+
 $container = $grid->addContainer('test_container', 'Actions');
 
 $button = $container->addButton('test_button');
@@ -258,6 +264,9 @@ $createdGrid = $grid->create();
 <script src="js/jquery.ui.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
+
+<script src="js/moment.min.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 
 <script src="js/mesour.grid.min.js"></script>
 
