@@ -67,13 +67,23 @@ $groups = [
 ];
 
 // create source
-$source = new \Mesour\DataGrid\Sources\ArrayGridSource($data, [
+$source = new \Mesour\DataGrid\Sources\ArrayGridSource('users', 'id', $data, [
 	'group' => $groups,
 ]);
 
-$source->setPrimaryKey('id');
 
-$source->join('group', 'group_id', 'name', 'group_name');
+
+$groupStructure = $source->addTableToStructure('group', 'id');
+$groupStructure->addNumber('id');
+$groupStructure->addText('name');
+
+$dataStrucutre = $source->getDataStructure();
+
+$source->joinField('group', 'group_id', 'name', 'group_name');
+
+$dataStrucutre->addDate('last_login');
+$dataStrucutre->addDate('timestamp');
+$dataStrucutre->addOneToOne('group_name', 'group', 'name');
 
 $currentUserRole = 'registered';
 
