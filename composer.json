@@ -10,7 +10,7 @@
     "require": {
         "php": ">= 5.5",
         "mesour/datagrid": "3.0.*@beta",
-        "mesour/array-manager": "^0.0.1"
+        "mesour/array-manager": "3.0.*@beta"
     },
     "require-dev": {
         "tracy/tracy": "^2.3"
