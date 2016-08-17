@@ -2,10 +2,7 @@
 
 namespace App\Presenters;
 
-use Nette,
-    App\Model,
-    Mesour\DataGrid\GridTree,
-    Mesour\DataGrid\_GridTree,
+use Mesour\DataGrid\GridTree,
     Mesour\DataGrid\NetteDbDataSource;
 
 
@@ -33,15 +30,15 @@ class TreePresenter extends BasePresenter {
 
 		$grid->enableSorting(); // enable sorting
 
-		$grid->onSort[] = $this->editSort; // here set sort callback
+		$grid->onSort[] = [$this, 'editSort']; // here set sort callback
 
 		$selection = $grid->enableRowSelection();
 
 		$selection->addLink('Active')
-		    ->onCall[] = $this->activeSelected;
+		    ->onCall[] = [$this, 'activeSelected'];
 
 		$selection->addLink('Active')
-		    ->onCall[] = $this->unactiveSelected;
+		    ->onCall[] = [$this, 'unactiveSelected'];
 
 		$grid->addText('name', 'Name')
 		    ->setOrdering(FALSE);

@@ -26,14 +26,13 @@ php:
 	date.timezone: Europe/Prague
 
 
-nette:
-	application:
+application:
 		errorPresenter: Error
 		mapping:
 			*: App\*Module\Presenters\*Presenter
 
-	session:
-		expiration: 14 days
+session:
+	expiration: 14 days
 
 services:
 	- App\Model\UserManager

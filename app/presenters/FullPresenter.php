@@ -2,13 +2,9 @@
 
 namespace App\Presenters;
 
-use Mesour\DataGrid\_Grid;
 use Mesour\DataGrid\BasicGrid;
-use Mesour\DataGrid\Column\IColumn;
 use Mesour\DataGrid\Column\Text;
-use Mesour\DataGrid\Render\Renderer;
 use Nette,
-    App\Model,
     \Mesour\DataGrid\Grid,
     \Mesour\DataGrid\NetteDbDataSource,
     \Mesour\DataGrid\Components\Link,
@@ -26,11 +22,11 @@ class FullPresenter extends BasePresenter {
 
 		$_sub_grid->enableEditableCells();
 
-		$_sub_grid->onEditCell[] = $this->editCell;
+		$_sub_grid->onEditCell[] = [$this, 'editCell'];
 
 		$_sub_grid->enableSorting();
 
-		$_sub_grid->onSort[] = $this->editSort;
+		$_sub_grid->onSort[] = [$this, 'editSort'];
 
 		$_sub_grid->addText('description');
 
@@ -39,15 +35,15 @@ class FullPresenter extends BasePresenter {
 		$selection = $_sub_grid->enableRowSelection();
 
 		$selection->addLink('Active')
-		    ->onCall[] = $this->activeSelected;
+		    ->onCall[] = [$this, 'activeSelected'];
 
 		$selection->addLink('Unactive')
 		    ->setAjax(FALSE)
-		    ->onCall[] = $this->unactiveSelected;
+		    ->onCall[] = [$this, 'unactiveSelected'];
 
 		$selection->addLink('Delete')
 		    ->setConfirm('Really delete all selected users?')
-		    ->onCall[] = $this->deleteSelected;
+		    ->onCall[] = [$this, 'deleteSelected'];
 
 		return $_sub_grid;
 	}
@@ -61,7 +57,7 @@ class FullPresenter extends BasePresenter {
 
 		$form->addSubmit('send', 'Save');
 
-		$form->onSuccess[] = $this->saveForm;
+		$form->onSuccess[] = [$this, 'saveForm'];
 
 		return $form;
 	}
@@ -120,7 +116,7 @@ class FullPresenter extends BasePresenter {
 			    $template->name = $data['name'];
 		    });
 
-		$subItems->addComponentItem('form', 'Test form', callback($this, 'createTestForm'))
+		$subItems->addComponentItem('form', 'Test form', [$this, 'createTestForm'])
 		    ->setCallback(function (Nette\Application\UI\Form $form, $data) {
 			    $data['primary_key'] = $data['user_id'];
 			    $form->setDefaults($data);
@@ -141,23 +137,23 @@ class FullPresenter extends BasePresenter {
 		$selection = $grid->enableRowSelection();
 
 		$selection->addLink('Active')
-		    ->onCall[] = $this->activeSelected;
+		    ->onCall[] = [$this, 'activeSelected'];
 
 		$selection->addLink('Unactive')
 		    ->setAjax(FALSE)
-		    ->onCall[] = $this->unactiveSelected;
+		    ->onCall[] = [$this, 'unactiveSelected'];
 
 		$selection->addLink('Delete')
 		    ->setConfirm('Really delete all selected users?')
-		    ->onCall[] = $this->deleteSelected;
+		    ->onCall[] = [$this, 'deleteSelected'];
 
 		$grid->getSelectionColumn()
 		    ->addHelper('Select active', '1')
 		    ->addHelper('Select inactive', '0');
 
-		$grid->onEditCell[] = $this->editCell;
+		$grid->onEditCell[] = [$this, 'editCell'];
 
-		$grid->onSort[] = $this->editSort;
+		$grid->onSort[] = [$this, 'editSort'];
 
 		$status_column = $grid->addStatus('action', 'S');
 
